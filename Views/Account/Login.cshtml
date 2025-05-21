@@ -1,0 +1,55 @@
+﻿@model LoginVM
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="row justify-content-center align-items-center" style="min-height: 80vh; background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%);">
+    <div class="col-md-5 col-lg-4">
+        <div class="card shadow-lg border-0 rounded-4">
+            <div class="card-body p-5">
+                <div class="text-center mb-4">
+                    <img src="@Url.Content("~/images/Asset1.png")" alt="Login" style="width: 60px; margin-bottom: 10px;margin-top: 10px;" />
+                    <h3 class="text-primary mb-1" style="font-size: 24px; font-weight: 600;">Sign In to Your Account</h3>
+                    <p class="text-muted" style="font-size: 15px;">Welcome back! Please enter your details.</p>
+                </div>
+                <form asp-action="Login" method="post" asp-controller="Account">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="form-group mb-3 text-start">
+                        <label asp-for="Email" class="form-label"></label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="bi bi-envelope"></i></span>
+                            <input asp-for="Email" class="form-control" placeholder="Enter Email" id="email"/>
+                        </div>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-3 text-start">
+                        <label asp-for="Password" class="form-label"></label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="bi bi-lock"></i></span>
+                            <input asp-for="Password" class="form-control" placeholder="Enter Password" type="password" id="password" />
+                        </div>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-check mb-3 text-start">
+                        <input asp-for="RememberMe" class="form-check-input" type="checkbox" id="rememberMeCheck" />
+                        <label asp-for="RememberMe" class="form-check-label" for="rememberMeCheck"> Remember me?</label>
+                    </div>
+                    <div class="d-grid mb-2">
+                        <button type="submit" class="btn btn-primary btn-lg rounded-pill">Login</button>
+                    </div>
+                    <div class="text-center mt-2">
+                        <a class="text-decoration-none text-primary" asp-action="Register" asp-controller="Account">Create new Account?</a>
+                    </div>
+                </form>
+                @section scripts {
+                    <partial name="_ValidationScriptsPartial" />
+                }
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <a asp-action="Index" asp-controller="Home" class="text-secondary text-decoration-none"><i class="bi bi-arrow-left"></i> Back to Home</a>
+        </div>
+    </div>
+</div>
