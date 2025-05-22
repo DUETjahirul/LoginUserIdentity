@@ -17,12 +17,12 @@
                     <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
                     <div class="form-group mb-3 text-start">
-                        <label asp-for="Email" class="form-label"></label>
+                        <label asp-for="UserNameOrEmail" class="form-label"> Email or User Name</label>
                         <div class="input-group">
-                            <span class="input-group-text bg-light"><i class="bi bi-envelope"></i></span>
-                            <input asp-for="Email" class="form-control" placeholder="Enter Email" id="email"/>
+                            <span class="input-group-text bg-light"><i class="bi bi-person"></i></span>
+                            <input asp-for="UserNameOrEmail" class="form-control" placeholder="Enter Email or User Name" id="emailOrUsername" />
                         </div>
-                        <span asp-validation-for="Email" class="text-danger"></span>
+                        <span asp-validation-for="UserNameOrEmail" class="text-danger"></span>
                     </div>
                     <div class="form-group mb-3 text-start">
                         <label asp-for="Password" class="form-label"></label>
@@ -43,9 +43,6 @@
                         <a class="text-decoration-none text-primary" asp-action="Register" asp-controller="Account">Create new Account?</a>
                     </div>
                 </form>
-                @section scripts {
-                    <partial name="_ValidationScriptsPartial" />
-                }
             </div>
         </div>
         <div class="text-center mt-4">

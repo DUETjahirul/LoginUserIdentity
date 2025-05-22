@@ -4,6 +4,10 @@ namespace LoginUserIdentity.ViewModel
 {
     public class RegisterVM
     {
+        [Required(ErrorMessage = "Please Enter UserName!")] // Validation attribute to ensure the field is required
+        [Display(Name = "User Name")] // Display name for the username field
+        public string UserName { get; set; } = default!; // Property for the username
+
         [EmailAddress(ErrorMessage = "Invalid Email Address!")]
         [Required(ErrorMessage ="Please Enter EMail!")]
         public string Email { get; set; } = default!; // Property for the username

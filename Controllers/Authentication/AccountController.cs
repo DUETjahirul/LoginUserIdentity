@@ -22,7 +22,6 @@ namespace LoginUserIdentity.Controllers.Authentication
             return View();
         }
         
-
         public IActionResult Register()     // This action method returns the view for user registration
         {
             return View();
@@ -34,6 +33,13 @@ namespace LoginUserIdentity.Controllers.Authentication
             {
                 if (ModelState.IsValid) 
                 {
+                   var chkUserName = await userManager.FindByNameAsync(model.UserName); // Check if the username already exists
+                    if (chkUserName != null) // If username exists, add error to ModelState
+                    {
+                        ModelState.AddModelError("", "Username already exists!");
+                        return View(model);
+                    }
+                    
                     var chkEmail = await userManager.FindByEmailAsync(model.Email); // Check if the email already exists
                     if (chkEmail != null) // If email exists, add error to ModelState
                     {
@@ -43,7 +49,7 @@ namespace LoginUserIdentity.Controllers.Authentication
                     var user = new IdentityUser() // Create a new user object
                     {
                         Email = model.Email, // Set the email property
-                        UserName = model.Email // Set the username property
+                        UserName = model.UserName // Set the username property
                     };
                     var result = await userManager.CreateAsync(user, model.Password); // Create the user with the provided password
                     if (result.Succeeded)
@@ -78,18 +84,29 @@ namespace LoginUserIdentity.Controllers.Authentication
             {
                 if (ModelState.IsValid) // Check if the model state is valid
                 {
-                    IdentityUser chkEmail = await userManager.FindByEmailAsync(model.Email); // Check if the email already exists
-                    if (chkEmail == null) // If email exists, add error to ModelState
+                    IdentityUser user;
+
+                    // Check if input is an email address
+                    if (model.UserNameOrEmail.Contains("@"))
                     {
-                        ModelState.AddModelError("", "Email are not registered!");
+                        user = await userManager.FindByEmailAsync(model.UserNameOrEmail);
+                    }
+                    else
+                    {
+                        user = await userManager.FindByNameAsync(model.UserNameOrEmail);
+                    }
+
+                    if (user == null)
+                    {
+                        ModelState.AddModelError("", "Username or Email is not registered!");
                         return View(model);
                     }
-                    if(await userManager.CheckPasswordAsync(chkEmail, model.Password) == false) // Check if the password is correct
+                    if (!await userManager.CheckPasswordAsync(user, model.Password))
                     {
                         ModelState.AddModelError("", "Invalid Password!"); // Add error to ModelState for invalid password
                         return View(model);
                     }
-                    var result = await signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false); // Attempt to sign in the user
+                    var result = await signInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, lockoutOnFailure: false); // Use username for sign-in
                     if (result.Succeeded) // If sign-in is successful
                     {
                         return RedirectToAction("Index", "Home"); // Redirect to the home page
@@ -97,7 +114,7 @@ namespace LoginUserIdentity.Controllers.Authentication
                     ModelState.AddModelError("", "Invalid login password!"); // Add error to ModelState for invalid login
                 }
             }
-            catch(Exception ex) // Catch any exceptions that occur during login
+            catch (Exception ex) // Catch any exceptions that occur during login
             {
                 ModelState.AddModelError("", ex.Message); // Add the exception message to ModelState
             }
